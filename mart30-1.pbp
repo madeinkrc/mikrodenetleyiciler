@@ -1,0 +1,154 @@
+'30 MART 2017 UYGULAMA 1
+'uygulama (hesap makinesi) + her tuþa basýldýðýnda ses çýkacak 
+'sonuca basýldýgýnda ayrý bir ses çýkacak
+
+DEFINE LOADER_USED 1 
+
+ADCON1=7
+
+TRISA=%000000
+PortA=%000001
+
+TRISB=%00000000
+PortB=0
+
+x var byte [10]  'displayde rakamlarýn (0-9) yazýmý için kullanýldý
+sonuc var byte   'sonucun tutulmasý için kullanýldý.
+onlar var byte   'sonuç çift basamaklýysa onlar basamaðýnýn tutulmasý için kullanýldý.
+birler var byte  'sonuç çift basamaklýysa birler basamaðýnýn tutulmasý için kullanýldý.
+
+i var byte       '1.sayý için kullanýldý.
+j var byte       '2.sayý için kullanýldý.
+k var byte       'iþlemler için ayrýldý.
+m var byte       'ses arttýrým döngüsünde kullanýldý.             
+k=" "           
+
+Symbol ses=PortA.5
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+symbol satir1=portb.4
+symbol satir2=portb.5
+symbol satir3=portb.6
+symbol satir4=portb.7
+
+symbol sutun1=portb.3
+symbol sutun2=portb.2
+symbol sutun3=portb.1
+symbol sutun4=portb.0
+
+anaDongu:
+
+TRISB=%00001111
+PortA=%000000
+
+satir1=1 : satir2=0 : satir3=0 : satir4=0
+    
+    IF SUTUN1=1 THEN i=1 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN2=1 THEN i=2 : Sound ses,[#50,5] : PAUSE 100 
+    IF SUTUN3=1 THEN i=3 : Sound ses,[#50,5] : PAUSE 100 
+    IF SUTUN4=1 THEN k="+" : j=i : Sound ses,[#70,5] : PAUSE 100
+
+satir1=0 : satir2=1 : satir3=0 : satir4=0
+
+    IF SUTUN1=1 THEN i=4 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN2=1 THEN i=5 : Sound ses,[#50,5] : PAUSE 100 
+    IF SUTUN3=1 THEN i=6 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN4=1 THEN k="-" : j=i : Sound ses,[#70,5] : PAUSE 100 
+
+satir1=0 : satir2=0 : satir3=1 : satir4=0
+
+    IF SUTUN1=1 THEN i=7 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN2=1 THEN i=8 : Sound ses,[#50,5] : PAUSE 100 
+    IF SUTUN3=1 THEN i=9 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN4=1 THEN k="*" : j=i : Sound ses,[#70,5] : PAUSE 100
+
+satir1=0 : satir2=0 : satir3=0 : satir4=1
+
+    IF SUTUN1=1 THEN i=0 : Sound ses,[#50,5] : PAUSE 100
+    IF SUTUN2=1 THEN i=0 : j=0 : Sound ses,[#70,5] : PAUSE 100
+    IF SUTUN4=1 THEN k="/" : j=i : Sound ses,[#70,5] : PAUSE 100
+    IF SUTUN3=1 THEN 
+        FOR m=0 to 100
+        Sound ses,[#m,5] : PAUSE 5 : m=m+20
+        next m
+        goto hesapla
+    ENDIF
+    
+TRISB=0                       
+PortA.0=1 
+PORTB=x[i]
+pAUSE 100
+
+goto anaDongu
+
+hesapla:
+
+TRISB=%00001111
+PortA=0
+
+SELECT CASE k
+        case "+"
+            SONUC=i+j
+        CASE "-"
+            SONUC=j-i
+        CASE "/"
+            SONUC=j/i
+        case "*"
+            SONUC=j*i
+END SELECT
+
+    TRISB=0                       
+    PortA.0=1
+    
+    IF SONUC>9 THEN
+        onlar=SONUC dig 1
+        birler=SONUC DIG 0
+        gosub goCift
+    ENDIF
+    IF SONUC<10 THEN
+        gosub gotek
+    ENDIF
+
+goto anaDongu
+
+goCift:
+        TRISB=0
+        PORTA=%000001
+        
+        PORTB=x[birler]
+        PAUSE 10
+    
+        PORTA=%000010
+        
+        PORTB=x[onlar]
+        PAUSE 5
+        
+        TRISB=%00001111
+        PortA=0
+        satir1=0 : satir2=0 : satir3=0 : satir4=1
+        IF SUTUN2=1 THEN goto anaDongu
+        
+goto goCift
+
+goTek:
+        TRISB=0
+        PortA=%000001
+        PORTB=x[SONUC]
+        PAUSE 100
+          
+        TRISB=%00001111
+        PortA=0
+        satir1=0 : satir2=0 : satir3=0 : satir4=1
+        IF SUTUN2=1 THEN goto anaDongu
+
+goto gotek

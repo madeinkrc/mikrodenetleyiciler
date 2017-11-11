@@ -1,0 +1,84 @@
+'25 MAYIS 2017 UYGULAMA 1
+'Asansör
+ 
+DEFINE LOADER_USED 1
+
+ADCON1=7
+
+TRISA = %001111  'kat butonlarý
+TRISB = 0        'ledler var  hazýr sayý(0,1,2,3)
+
+PORTB = %11111110 'ilk baþta sadece 0.katta yanmasý için (ortak anot "0"da yanar.)
+
+zaman CON 500
+
+hedef var byte
+kat var byte
+i var byte
+kat=0
+
+symbol kat0=PortA.0
+symbol kat1=PortA.1
+symbol kat2=PortA.2
+symbol kat3=PortA.3
+
+label:
+
+IF kat0=0 THEN
+hedef=0
+gosub hareket
+PORTB = %11111110    
+KAT=0
+ENDIF
+
+IF kat1=0 THEN
+hedef=2
+gosub hareket
+PORTB = %11111011    
+KAT=2
+ENDIF
+
+IF kat2=0 THEN
+hedef=4
+gosub hareket
+PORTB = %11101111        
+KAT=4
+ENDIF
+
+IF kat3=0 THEN
+hedef=6
+gosub hareket
+PORTB = %10111111   
+KAT=6
+ENDIF
+
+GOTO LABEL
+
+hareket:
+
+    if hedef>kat then
+        PortA.4=0  'Yukarý ledler 0 olursa yanar
+        for i=kat to hedef
+        pause zaman
+        portb=~portb
+        portb=portb<<1
+        portb=~portb
+        next i
+        PortA.4=1
+        PortA.5=1
+    endif
+    
+    if hedef<kat then
+        PortA.5=0  'Aþaðýý ledler 0 olursa yanar
+        for i=kat to hedef step -1  
+        pause zaman
+        portb=~portb
+        portb=portb>>1
+        portb=~portb
+        next i
+        PortA.5=1
+        PortA.4=1
+    endif
+    
+RETURN
+

@@ -1,0 +1,77 @@
+'20 NÝSAN 2017 UYGULAMA 5
+'SAAT UYGULAMASI
+'Extra olarak ayar kýsmý var "space" tuþuna bastýðýmýzda yeni saat ve dakikayý giriyoruz.
+
+INCLUDE "LCD.PBP"
+
+DEFINE LOADER_USED 1 
+
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h         
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+
+saat var byte
+saat=23
+
+dakika var byte
+dakika=59
+
+saniye var byte
+saniye=0
+
+x var byte
+i var byte
+j var byte
+k var byte
+l var byte
+
+label:    
+
+ WHILE saat<25
+  WHILE dakika<61
+   WHILE saniye<61
+   
+    saniye=saniye+1
+    IF(saniye==60) THEN dakika=dakika+1 : saniye=0
+    IF(dakika==60) THEN saat=saat+1 : dakika=0
+    IF(saat==24) THEN saat=0 
+    
+    'Aþaðýdaki iþlemlerin amacý saatte tek basamak olmadýðýndan ; tek olanlarýn baþýna 0 getirir.
+
+    IF(saat<10 and dakika<10 and saniye<10) THEN LCDOUT $FE,1,"0",#saat,":","0",#dakika,":","0",#saniye:PAUSE 50
+    IF(saat<10 and dakika<10 AND saniye>9) THEN LCDOUT $FE,1,"0",#saat,":","0",#dakika,":",#saniye:PAUSE 50
+    IF(saat<10 and saniye<10 AND dakika>9) THEN LCDOUT $FE,1,"0",#saat,":",#dakika,":","0",#saniye:PAUSE 50
+    IF(saat<10 and saniye>9 AND dakika>9) THEN LCDOUT $FE,1,"0",#saat,":",#dakika,":",#saniye:PAUSE 50
+    IF(dakika<10 and saniye<10 AND saat>9) THEN LCDOUT $FE,1,#saat,":","0",#dakika,":","0",#saniye:PAUSE 50
+    IF(dakika<10 AND saat>9 and saniye>9) THEN LCDOUT $FE,1,#saat,":","0",#dakika,":",#saniye:PAUSE 50
+    IF(saniye<10 and saat>9 and dakika>9) THEN LCDOUT $FE,1,#saat,":",#dakika,":","0",#saniye:PAUSE 50
+    IF(saat>9 and dakika>9 and saniye>9) THEN LCDOUT $FE,1,#saat,":",#dakika,":",#saniye:PAUSE 50           
+
+   HSERIN 1,ayarla,[X]
+
+   WEND
+  WEND    
+ WEND
+     
+goto label
+
+ayarla:
+
+    WHILE x=" "
+        
+        LCDOUT $FE,1,"Saati Giriniz:"                       
+        HSERIN [str saat\2] 'STR x\2 nin amacý 2 boyutlu bir x girdisi bekliyor.
+        pause 100
+
+        LCDOUT $FE,1,"Dakikayi Giriniz:"
+        HSERIN [str dakika\2]
+        pause 100
+        
+        HSERIN [X]
+        IF X=" " THEN goto label
+
+    WEND
+    
+goto label
+

@@ -1,0 +1,131 @@
+'03 MAYIS 2017 UYGULAMA 2
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.3
+'a ve d tuþu ile motor ileri geri dönsün 
+'toplam tur sayýsý displayde yazsýn ve 0 oldugunda no yazsýn ve yazýmý engellesin.
+
+DEFINE LOADER_USED 1 
+                                                                                            
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h         
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+onlar var byte
+birler var byte
+
+s var byte
+i var byte
+d var bytE
+y var byte
+
+x var byte [10]
+n var byte
+o var byte
+
+n=%00110111
+o=%00111111
+d=0
+y=0
+i=0
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+zaman con 10
+
+dongu:
+        
+    HSERIN [s]
+    
+    WHILE s="a" 
+    goto ileri 
+    wend
+    while s="d" 
+    goto geri 
+    wend
+
+goto dongu
+
+ileri:
+PortA=0
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : d=d+1
+if d // 52 = 0 then d=0 : goto sayarttir
+
+goto dongu
+
+geri:
+PortA=0
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : d=d+1
+if d // 52 = 0 then d=0 : goto sayazalt
+    
+goto dongu
+
+sayarttir:
+
+    i=i+1
+    IF i>9 then GOTO ciftsay
+    if i=0 then goto sifir
+    PortA=%000010
+    PortB=x[i]
+    PAUSE 100
+
+goto dongu
+
+ciftsay:
+
+    for y=0 to 9
+    onlar=i dig 1
+    birler=i DIG 0
+    
+    PortA=%0000001   
+    PortB=x[onlar]
+    PAUSE 10
+    
+    PortA=%0000010
+    PortB=x[birler]
+    PAUSE 10 
+    
+    next 
+
+goto dongu
+
+sayazalt:
+
+    i=i-1
+    IF i>9 then GOTO ciftsay
+    if i=0 then goto sifir
+    PortA=%000010
+    PortB=x[i]
+    PAUSE 100
+
+goto dongu
+
+sifir:
+
+PortA=%000001
+PortB=n
+pause 10
+PortA=%000010
+PortB=o
+pause 10
+
+goto sifir
+

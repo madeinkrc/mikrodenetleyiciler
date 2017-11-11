@@ -1,0 +1,33 @@
+'27 NÝSAN 2017 UYGULAMA 2
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.2
+'Bir turu 48 adýmda bitiriyor 360 / 48 = 7,5
+'Bir tam tur ileri gidip bir tam tur geri dönecek (döngü)
+
+DEFINE LOADER_USED 1 
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+i var bytE : i=0
+zaman con 20
+
+ileri:
+
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : i=i+1
+if i // 52 = 0 then i=0 : goto geri
+
+goto ileri
+
+geri:
+
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : i=i+1
+if i // 52 = 0 then i=0 : goto ileri
+
+goto geri 

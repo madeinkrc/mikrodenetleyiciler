@@ -1,0 +1,67 @@
+DEFINE LOADER_USED 1
+define HSER_RCSSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1 
+     
+TRISA=%000000         
+
+BEKLE con 1000
+x var byte [10]
+y var byte
+z var byte
+k var byte
+i var byte
+z=0
+y=0
+x[0]=$3F
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+ADCON1=7
+portb=0
+
+label0:
+TRISB=%00001111 
+porta=0
+portb.4=1:portb.5=0:portb.6=0:portb.7=0
+if portb.3=1 then y=1
+if portb.2=1 then y=2
+if portb.1=1 then y=3
+pause 10
+gosub label
+goto label0
+
+
+
+label:
+TRISB=%00000000
+
+  while y<10 
+     Porta=%000001
+     portb=x[y]
+     goto label0
+   wend
+     
+     while y>=10
+     z=y dig 0
+     k=y dig 1
+     for i=0 to 49  
+         porta=%000001
+         portb=x[z]
+         pause 10
+         porta=%000010
+         portb=x[k]
+         pause 10
+         goto label0
+     next i
+     wend
+     
+ return

@@ -1,0 +1,78 @@
+'03 MAYIS 2017 UYGULAMA 1
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.4
+'Bir turu 48 adýmda bitiriyor 360 / 48 = 7,5 derece adýmý  
+'Sürekli geri yönde dönecek ve displayde tur sayýsý yazacak
+
+DEFINE LOADER_USED 1 
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+x var byte [10]
+onlar var byte
+birler var byte
+i var byte
+y var byte
+d var byte
+i=0
+y=0
+d=0
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+zaman con 10
+
+anadongu:
+
+PortA=%000000 'motor dönerken displayde saçma þeyler yazmamasý için kapatýyoruz.
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : d=d+1
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : d=d+1
+''2 fazlý tam adým sürülme
+'pulsOUT PortA.2,100 : PortB=%00001001 : pause zaman : d=d+1
+'pulsOUT PortA.2,100 : PortB=%00001100 : pause zaman : d=d+1
+'pulsOUT PortA.2,100 : PortB=%00000110 : pause zaman : d=d+1
+'pulsOUT PortA.2,100 : PortB=%00000011 : pause zaman : d=d+1
+
+if d // 52 = 0 then d=0 : goto say
+
+goto anadongu
+
+say:
+
+    i=i+1
+    IF i>9 then GOTO ciftsay
+    PortA=%000010
+    PortB=x[i]
+    PAUSE 100
+
+goto anadongu
+
+ciftsay:
+
+    for y=0 to 9
+    onlar=i dig 1
+    birler=i DIG 0
+    
+    PortA=%0000001   
+    PortB=x[onlar]
+    PAUSE 10
+    
+    PortA=%0000010
+    PortB=x[birler]
+    PAUSE 10 
+    
+    next 
+
+goto anadongu

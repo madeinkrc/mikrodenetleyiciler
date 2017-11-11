@@ -1,0 +1,36 @@
+'09 MART 2017 UYGULAMA 1
+'uygulama 2.2
+
+DEFINE LOADER_USED 1 
+
+TRISB=%00000000
+TRISA=%000000
+
+ADCON1=7 'A VE E PORTUNU DÝJÝTALE CEVÝR
+
+PORTA.0=1   'BÝR VERELÝMKÝ TRANSISTORDEN TOPRAGA BAGLANSIN
+PORTA.5=0   'BUZZERI KAPATIR
+PORTB=1
+
+x var byte
+x=50
+
+Symbol ses=PortA.5
+
+label:    
+
+WHILE   PortB<128   'SOLA DOÐRU GÝDER
+    PortB=PortB<<1
+    Sound ses,[#x,10] 'ilki ses tonu ikincisi ise ne kadar sure basacagý '
+    x=x+10
+    PAUSE 10
+WEND
+
+WHILE   PortB>1     'SAÐA DOÐRU GÝDER
+    PortB=PortB>>1
+    Sound ses,[#x,10] 'ilki ses tonu ikincisi ise ne kadar sure basacagý '
+    x=x-10
+    PAUSE 10
+WEND
+
+goto label

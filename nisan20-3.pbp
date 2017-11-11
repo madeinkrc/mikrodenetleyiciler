@@ -1,0 +1,23 @@
+'20 NÝSAN 2017 UYGULAMA 3
+'LCD türkçe karakter
+
+INCLUDE "LCD.PBP"
+
+DEFINE LOADER_USED 1 
+
+LCDOUT $FE,$40,0,0,10,0,14,17,0,0     'aðlayan surat
+LCDOUT $FE,$48,31,17,21,21,21,17,31   'kare
+LCDOUT $FE,$50,14,10,27,17,27,10,14   'artý
+LCDOUT $FE,$58,24,4,26,5,26,4,24      'ok
+LCDOUT $FE,$60,4,14,31,14,14,14,14    'yukarý yönü
+LCDOUT $FE,$68,0,0,10,0,17,14,0,0     'gülen surat
+
+label:
+
+LCDOUT $FE,1
+LCDOUT 0,$14,3," ",5 'sýnavda çok yapýlan hata. ($40 yazma)
+LCDOUT $FE,$C0,1,$14,2,$14,4 '$14 imleci bir sað pozisyona taþý
+PAUSE 100
+
+GOTO LABEL
+

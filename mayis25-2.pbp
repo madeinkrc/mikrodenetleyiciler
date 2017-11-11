@@ -1,0 +1,78 @@
+'25 MAYIS 2017 UYGULAMA 2
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.8
+'sw1 ile arttýr sw2 ile azalt sw3 ile baþlat sw4 e ilk bastýðýnda dur , ikincisinde devam et.
+'tamamlanamadý
+
+DEFINE LOADER_USED 1 
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+i var bytE : i=0
+zaman con 20
+
+x var byte [10]
+y var byte
+y=0
+
+onlar var byte
+birler var byte
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111              
+x[9]=%01101111
+
+PortA.3=1
+
+symbol SW1=PortB.4
+symbol SW2=PortB.6
+symbol SW3=PortB.5
+symbol SW4=PortB.7
+
+label:
+
+TRISB=%11110000
+if sw1=1 then 
+    TRISB=0
+    y=y+1
+    
+    if y<10 then
+        PortA=%001010
+        PortB=x[y]
+        PAUSE 250 
+    endif
+    
+    if y>9 then
+        for i=0 to 9
+            onlar=y dig 1
+            birler=y DIG 0
+    
+            PortA=%001001   
+            PortB=x[onlar]
+            PAUSE 10
+    
+            PortA=%001010
+            PortB=x[birler]
+            pAUSE 10 
+        next
+    endif
+endif
+
+goto label
+
+
+ileri:
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman : i=i+1
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman : i=i+1
+goto ileri
+

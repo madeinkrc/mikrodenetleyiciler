@@ -1,0 +1,49 @@
+'16 MART 2017 UYGULAMA 3
+'uygulama 2.6
+'displayde 1-99 arasý sayý yazdýrma (zorluðu çift basamakta)
+
+DEFINE LOADER_USED 1 
+
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+
+TRISA=%000000
+PortA=%000001
+TRISB=%00000000
+PortB=0
+
+x var byte [10]
+i var byte
+j var byte
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+label:
+
+FOR i=0 to 9
+    FOR j=0 to 9
+
+        PortA=%000010
+        PortB=x[i]
+        pause 20
+        
+        PortA=%000001
+        PortB=x[j]
+        pause 20
+        
+    next
+next
+
+goto label
+

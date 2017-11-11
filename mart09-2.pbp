@@ -1,0 +1,35 @@
+'09 MART 2017 UYGULAMA 2
+'uygulama 2.3
+
+DEFINE LOADER_USED 1 
+
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+
+TRISA=%000000
+PortA=%000001
+TRISB=%00000000
+PortB=1
+
+x var byte
+
+ADCON1=7
+
+label:
+    
+    HSERIN [x]      ' a yý yollar
+    
+    SELECT CASE x
+
+        CASE "a"     'sola kaydýrma kýsmý
+            PortB=PortB<<1  : IF portb=0 then portb=1  : pause 400
+            'Sound ses,[#x,10] : x=x+10
+
+        CASE "d"    'saða kaydýrma kýsmý
+            PortB=PortB>>1  : IF portb=0 then portb=1  : pause 400
+            'Sound ses,[#x,10] : x=x-10
+    end select
+
+goto label

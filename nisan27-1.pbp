@@ -1,0 +1,42 @@
+'27 NÝSAN 2017 UYGULAMA 1
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.1
+'Bir turu 48 adýmda bitiriyor 360 / 48 = 7,5 derece
+'Bir adýmý 7.5 derece
+'optik göz ýþýk aldýðýnda ileri , ýþýk almadýðýnda geri dönecek.
+
+DEFINE LOADER_USED 1 
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+i var bytE
+i=0
+zaman con 100
+
+anadongu:
+
+if PORTA.4=1 THEN
+    gosub ileri
+ELSE              
+    GOSUB geri
+ENDIF
+
+goto anadongu
+
+ileri:
+
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman
+return
+
+geri:
+
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman
+PortA.4=1
+return

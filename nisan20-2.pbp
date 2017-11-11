@@ -1,0 +1,26 @@
+'20 NÝSAN 2017 UYGULAMA 2
+'LCD DE 10 DAN GERÝYE SAYDIR 0 OLUNCA 2. SATIRDA "BOOM" SÜREKLÝ YANSIN. 
+
+INCLUDE "LCD.PBP"
+
+DEFINE LOADER_USED 1 
+i var byte
+
+label:
+
+for i=10 to 0 step -1
+
+LCDOUT $FE,1,#i
+PAUSE 200
+       
+if i=0 then 
+    LCDOUT $FE,$C0,"BOOOOM"
+    PAUSE 200   
+     sonsuz:
+     goto sonsuz   
+endif
+ 
+next
+
+GOTO LABEL
+

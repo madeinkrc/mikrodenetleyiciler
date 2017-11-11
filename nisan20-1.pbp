@@ -1,0 +1,15 @@
+'20 NÝSAN 2017 UYGULAMA 1
+'LCD de yazý yazdýrma
+
+INCLUDE "LCD.PBP"                         
+
+DEFINE LOADER_USED 1 
+
+label:
+
+LCDOUT $FE,1,"SERCAN KARACA"          '1.satýr
+LCDOUT $FE,$C0,"MEHMET CELIK <3"      '2.satýr (C0)
+PAUSE 100
+
+GOTO LABEL
+

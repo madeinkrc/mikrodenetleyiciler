@@ -1,0 +1,62 @@
+'18 MAYIS 2017 UYGULAMA 1
+
+'LCD-TERMOMETRE'
+'lcd nin ilk satýrýnda "Termometre: xx c" þeklinde oda sýcaklýðýný gösterecek,ayný anda ikinci 
+'satýrýnda "Termostat: xx c" þeklinde ayarlanan termostat sýcaklýðýný gösterecek ve butonlarla ayarlanabilecek. 
+'Artým yapýlýrken alt satýrýn sonunda
+'yukarý ok azaltým yapýlýrken asagý ok gözükecek. Oda sýcaklýðý ayarlanan termostat deðerine geldiðinde
+'ilk satýrýn sonunda lamba simgesi çýkacak ve klimanýn devreye girdiðini ifade edecek.
+'uygulama 8.1'
+
+DEFINE LOADER_USED 1
+
+define HSER_RCSSTA 90h
+DEFINE HSER_TXSTA 24h
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1 
+
+INCLUDE "lcd.pbp"
+
+TRISA=%001100
+TRISB=%00000000
+porta.4=1
+ADCON1=7
+
+y var byte
+z var byte:z=0
+k var byte
+i var byte
+a var byte
+
+lcdout $fe,$40,7,5,7,0,0,0,0,0          'derece yuvarlagý'
+lcdout $fe,$48,0,0,14,10,10,14,4,4      'sonuk lamba'
+lcdout $fe,$50,4,21,14,27,10,14,4,4     'yanýk lamba'
+
+derece var byte
+y=0
+derece=0
+
+label:
+    gosub oku
+    gosub yaz
+goto label
+
+oku:
+    porta.0=0
+    TRISB=%11111111
+    y=portb
+    pause 10
+    return
+yaz:
+    porta.0=1
+    TRISB=%00000000
+    LCDOUT $fe,1,"Termometre:",#y,0,"C"
+    IF y<z THEN 
+    LCDOUT $fe,$C0,"Termostat:",#z,0,"C ",1
+    ELSE
+        LCDOUT $fe,$C0,"Termostat:",#z,0,"C ",2
+    ENDIF
+    PAUSE 500
+    IF porta.2=0 and z>0 THEN z=z-1
+    IF porta.3=0 THEN z=z+1
+return

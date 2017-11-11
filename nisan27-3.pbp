@@ -1,0 +1,53 @@
+'27 NÝSAN 2017 UYGULAMA 3
+'UNÝPOLAR STEP MOTOR UYGULAMA 6.3
+'Bir turu 48 adýmda bitiriyor 360 / 48 = 7,5
+'a veya d ye basýlý tutulduðu müddetçe ileri - geri
+'w veya s ye 1 kere basýldýðýnda ileri - geri
+
+DEFINE LOADER_USED 1 
+                                                                                            
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h         
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+   
+TRISA=0
+TRISB=0
+ADCON1=7
+
+x var byte
+i var bytE : i=0
+zaman con 20
+
+dongu:
+        
+    HSERIN [X]
+    
+    WHILE x="a" 
+    goto ileri 
+    wend
+    while x="d" 
+    goto geri 
+    wend
+    if x="w" then goto ileri  
+    if x="s" then goto geri  
+
+goto dongu
+
+ileri:
+
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman
+if x="w" then goto ileri
+goto dongu
+
+geri:
+
+pulsOUT PortA.2,100 : PortB=%00000001 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000010 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00000100 : pause zaman
+pulsOUT PortA.2,100 : PortB=%00001000 : pause zaman
+if x="s" then goto geri
+goto dongu

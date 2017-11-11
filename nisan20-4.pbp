@@ -1,0 +1,23 @@
+'20 NÝSAN 2017 UYGULAMA 4
+'Terminal ve Lcd nin ortak kullanýmý
+'Terminal programý kullanarak bilgisayardan girilen harfin lcd ekranda yazdýrýlmasý
+'pic'ten bilgisayara veri aktarýmý
+
+INCLUDE "LCD.PBP"
+
+DEFINE LOADER_USED 1 
+
+DEFINE HSER_RCSTA 90h
+DEFINE HSER_TXSTA 24h         
+DEFINE HSER_BAUD 9600
+DEFINE HSER_CLROERR 1
+
+x var byte
+
+label:
+
+HSERIN [x]
+lcdout $fe,1,x
+Pause 100
+
+goto label

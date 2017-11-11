@@ -1,0 +1,83 @@
+'11 MAYIS 2017 UYGULAMA 2
+'termostat
+
+DEFINE LOADER_USED 1
+
+TRISA=%001100    'butonlar
+TRISB=%00000000
+porta.4=1        'led
+ADCON1=7
+
+y var byte
+z var byte
+k var byte
+i var byte
+a var byte
+derece var byte
+x var byte [10]
+
+x[0]=%00111111
+x[1]=%00000110
+x[2]=%01011011
+x[3]=%01001111
+x[4]=%01100110
+x[5]=%01101101
+x[6]=%01111101
+x[7]=%00000111
+x[8]=%01111111
+x[9]=%01101111
+
+y=0
+derece=0
+
+label:
+
+if porta.2=0 and porta.3=1 then y=derece : gosub yaz
+if porta.2=0 and porta.3=0 then 'iki tuþa ayný anda basýldýðýnda derece ayarlanmýþ oluyor. 
+    derece=derece+1
+    y=derece
+    gosub yaz
+endif
+
+if porta.2=1 and porta.3=1 then 'herhangi bir tuþa basýlmazsa (anadöngü)
+    gosub oku 
+    gosub yaz
+    if derece<y then  porta.4=0
+    if derece>=y then  porta.4=1
+endif
+
+goto label
+
+oku:
+
+porta.0=0
+TRISB=%11111111
+y=portb
+pause 10
+return
+
+yaz:
+
+porta.0=1
+TRISB=%00000000
+
+if y<10 then
+     Porta.1=1
+     portb=x[y]
+endif
+ 
+ if y>=10 then
+     z=y dig 0
+     k=y dig 1
+     for i=0 to 15 
+         porta.1=1
+         portb=x[z]
+         pause 10
+         porta.1=0
+         portb=x[k]
+         pause 10
+     next i
+endif
+
+return
+
