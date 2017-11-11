@@ -1,5 +1,5 @@
-# mikrodenetleyiciler
+# programlanabilir-denetleyiciler
 
-Bu depoda mikrodenetleyiciler dersiyle ilgili bazı kodlamalar mevcuttur.
+Bu depoda programlanabilir denetleyiciler dersiyle ilgili bazı kodlamalar mevcuttur.
 
 PIC Basic dili kullanılmıştır.
